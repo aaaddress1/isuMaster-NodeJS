@@ -1,0 +1,167 @@
+extends ./template/bootstrap
+
+block title
+	title 義守管家 (#{usrName})
+
+	nav.navbar.navbar-default
+		.container-fluid
+			.navbar-header
+				button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#mynav', aria-expanded='false', aria-controls='mynav')
+					span.sr-only Toggle navigation
+					span.icon-bar
+					span.icon-bar
+					span.icon-bar
+
+				a.navbar-brand(href=".") 義守管家
+			
+			.collapse.navbar-collapse(id='mynav')
+				ul.nav.navbar-nav
+					li
+						a(href='/') 總覽
+					li
+						a(href='/isuMoodle') Moodle管理
+					li
+						a(href='/isuSurvey') 問卷機器人
+				ul.nav.navbar-nav.navbar-right
+					li
+						a(href='/?act=logout') 登出 (#{usrName})
+
+
+
+
+
+block content
+	.container
+		script.
+			$(document).ready(function() {
+				RefreshTable();
+				RefreshVacation();
+			});
+
+			function RefreshVacation() {
+				$.ajax({
+							url: '/getAbsenteeism',
+							success: function(data) {
+
+								if (data['absenceArr'] == null || data['vacationArr'] == null) {
+									window.location.replace('/?act=logout');
+									return;
+								}
+								$('#vacationHeader').html('出缺席狀況');
+
+								var currTableBody = $("#vacationTable").find("tbody");
+								for(var i in data['absenceArr']) {
+									var curClass = data['absenceArr'][i];
+									currTableBody.append(	'<tr>' +
+															'<td>' + curClass[1] + '</td>' +
+															'<td>' + curClass[2] + '</td>' +
+															'<td>' + curClass[3] + '</td>' +
+															'<td>曠課</td>' +
+															'</tr>');
+								}
+								for(var i in data['vacationArr']) {
+									var curClass = data['vacationArr'][i];
+									currTableBody.append(	'<tr>' +
+															'<td>' + curClass[1] + '</td>' +
+															'<td>' + curClass[2] + '</td>' +
+															'<td>' + curClass[3] + '</td>' +
+															'<td>' + curClass[4] + '</td>' +
+															'</tr>');
+								}
+							}
+				});
+			}
+
+			function RefreshTable() {
+
+					$.ajax({
+						url: '/getTodayClasses',
+						success: function(data) {
+
+							if (data['error']) {
+								window.location.replace('/?act=logout');
+								return;
+							}
+							$('#todayHeader').html('今天 星期' + data['today']);
+							$('#tommoHeader').html('明天 星期' + data['tommow']);
+
+							var currTableBody = $("#todayTable").find("tbody");
+							for(var i in data['list']) {
+								var curClass = data['list'][i];
+								currTableBody.append(	'<tr>' +
+														'<td>' + curClass[0] + '</td>' +
+														'<td>' + curClass[1] + '</td>' +
+														'<td>' + curClass[2] + '</td>' +
+														'<td>' + curClass[3] + '</td>' +
+														'<td>' + curClass[4] + '</td>' +
+														'<td>' + curClass[5] + '</td>' +
+														'</tr>');
+							}
+
+							var currTableBody = $("#tommowTable").find("tbody");
+							for(var i in data['tommowList']) {
+								var curClass = data['tommowList'][i];
+								currTableBody.append(	'<tr>' +
+														'<td>' + curClass[0] + '</td>' +
+														'<td>' + curClass[1] + '</td>' +
+														'<td>' + curClass[2] + '</td>' +
+														'<td>' + curClass[3] + '</td>' +
+														'<td>' + curClass[4] + '</td>' +
+														'<td>' + curClass[5] + '</td>' +
+														'</tr>');
+							}
+					}
+				});
+			}
+
+
+		h1 總覽
+
+		<!-- today -->
+		div(class ='panel panel-warning')
+			div(class='panel-heading', id='todayHeader' ,data-toggle='collapse', data-parent='#accordion', href='#collapseOne',aria-expanded='true', aria-controls='collapseOne')
+			#collapseOne.panel-collapse.collapse.in(role='tabpanel', aria-labelledby='collapseOne') 	
+
+				table.table.table-striped.table-hover(id='todayTable')
+					thead
+						tr
+							th 時間
+							th 是否可翹
+							th 教授
+							th 系級
+							th 科目
+							th 教室
+					tbody
+
+		<!-- tommow -->
+		div(class ='panel panel-default')
+			div(class='panel-heading',id='tommoHeader', data-toggle='collapse', data-parent='#accordion', href='#collapseTwo', aria-expanded='true', aria-controls='collapseTwo')
+			
+			#collapseTwo.panel-collapse.collapse.in(role='tabpanel', aria-labelledby='')
+				table.table.table-striped.table-hover(id='tommowTable')
+					thead
+						tr
+							th 時間
+							th 是否可翹
+							th 教授
+							th 系級
+							th 科目
+							th 教室
+					tbody
+
+		<!-- Vacation -->
+		div(class ='panel panel-success')
+			div(class='panel-heading',id='vacationHeader', data-toggle='collapse', data-parent='#accordion', href='#collapseThree', aria-expanded='true', aria-controls='collapseThree')
+			
+			#collapseThree.panel-collapse.collapse.in(role='tabpanel', aria-labelledby='')
+				table.table.table-striped.table-hover(id='vacationTable')
+					thead
+						tr
+							th 課名
+							th 日期
+							th 節數
+							th 狀態
+					tbody
+
+
+

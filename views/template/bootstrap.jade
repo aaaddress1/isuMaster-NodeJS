@@ -1,0 +1,57 @@
+doctype html
+
+html(lang="zh_tw")
+	head
+		meta(http-equiv="X-UA-Compatible",
+			name="viewport",
+			content="width=device-width, initial-scale=1, IE=edge",
+			charset="utf-8")
+
+		meta(property="og:type", content="article")
+		meta(property="og:url", content="http://isu.30cm.tw")
+		meta(property="og:image", content="https://media.licdn.com/mpr/mpr/shrink_200_200/p/6/005/077/3d3/39ef9bb.png")
+		meta(property="og:title", content="isuMaster 義守管家")
+		meta(property="og:description", content="整合學校各項功能並優化使用者體驗的網頁服務，提供自動填寫期中末問卷機器人、自動整理課表、Moodle作業分析等服務的完美整合。")
+
+
+		block title
+			title Default Title
+
+		//- jquery
+		script(src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js")
+
+		//- Bootstrap CSS
+		
+		link(href="https://bootswatch.com/darkly/bootstrap.css", rel="stylesheet")
+		script(src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js")
+
+		//-Google 字體
+		link(rel="stylesheet", href="http://fonts.googleapis.com/earlyaccess/cwtexhei.css")
+		link(rel="stylesheet", href="http://fonts.googleapis.com/earlyaccess/cwtexming.css")
+		
+		//- 修正字體
+		link(rel="stylesheet", href="/css/font.css")
+
+
+		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+		<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+		<!--[if lt IE 9]>
+		<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+		<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+
+		style.
+			.navbar { background-color: transparent; }
+
+	body()
+		
+		block content
+			h1.text-center Default Post
+
+		.foot
+			div(style='position:absolute; bottom: 0px; right: 0px;')
+			
+				| 最後更新 2016/9/15, by aaaddress1@gmail.com (
+				a(href='http://facebook.com/aaaddress1') 馬聖豪
+				|)
+		

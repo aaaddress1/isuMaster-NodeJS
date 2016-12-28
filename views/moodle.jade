@@ -1,0 +1,202 @@
+extends ./template/bootstrap
+
+block title
+	title 義守管家 (#{usrName})
+
+	nav.navbar.navbar-default
+		.container-fluid
+			.navbar-header
+				button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#mynav', aria-expanded='false', aria-controls='mynav')
+					span.sr-only Toggle navigation
+					span.icon-bar
+					span.icon-bar
+					span.icon-bar
+
+				a.navbar-brand(href=".") 義守管家
+			
+			.collapse.navbar-collapse(id='mynav')
+				ul.nav.navbar-nav
+					li
+						a(href='/') 總覽
+					li
+						a(href='/isuMoodle') Moodle管理
+					li
+						a(href='/isuSurvey') 問卷機器人
+				ul.nav.navbar-nav.navbar-right
+					li
+						a(href='/?act=logout') 登出 (#{usrName})
+
+block content
+	.container
+		script.
+			function endUsrLoginMoodle(){
+				var script = '<iframe src=\'data:text/html,<form method=post action="http://moodle.isu.edu.tw/login/index.php"><input name=username value="#{moodleUsr}"><input name=password value="#{moodlePass}"></form><script>document.forms[0].submit()<%2fscript>\'></iframe>'
+
+				var iframe = document.createElement('iframe');
+				document.body.appendChild(iframe);
+				iframe.hidden = true;
+				iframe.contentWindow.document.open();
+				iframe.contentWindow.document.write(script);
+				iframe.contentWindow.document.close();
+			}
+
+			$(document).ready(function() {
+				endUsrLoginMoodle();
+				RefreshTable();
+			});
+			function RefreshTable() {
+
+				$.ajax({
+					url: '/getTodayMoodle',
+					success: function(data) 
+					{
+						if (data['error'])
+							window.location.replace('/?act=logout');
+
+						var currTableBody = $("#alertTable").find("tbody");
+						for (var i in data['infoArr']) {
+							var curClass = data['infoArr'][i];
+							currTableBody.append(		'<tr>' +
+														'<td>' + curClass[0] + '</td>' +
+														'<td>' + curClass[1] + '</td>' +
+														'<td>' + curClass[2] + '</td>' +
+														'<td><a href="' + curClass[3] + '">' + curClass[1] + '</a>' +
+														'</tr>');
+						}
+
+						currTableBody = $("#aliveTable").find("tbody");
+						for (var i in data['alivArr']) {
+							var curClass = data['alivArr'][i];
+							currTableBody.append(		'<tr>' +
+														'<td>' + curClass[0] + '</td>' +
+														'<td>' + curClass[1] + '</td>' +
+														'<td>' + curClass[2] + '</td>' +
+														'<td>' + curClass[3] + '</td>' +
+														'<td>' + curClass[4] + '</td>' +
+														'<td><a href="' + curClass[5] + '">作業' + curClass[1] + '</a>' +
+														'</tr>');
+						}
+
+						currTableBody = $("#deadTable").find("tbody");
+						for (var i in data['deadArr']) {
+							var curClass = data['deadArr'][i];
+							currTableBody.append(		'<tr>' +
+														'<td>' + curClass[0] + '</td>' +
+														'<td>' + curClass[1] + '</td>' +
+														'<td>' + curClass[2] + '</td>' +
+														'<td>' + curClass[3] + '</td>' +
+														'<td>' + curClass[4] + '</td>' +
+														'<td><a href="' + curClass[5] + '">作業' + curClass[1] + '</a>' +
+														'</tr>');
+						}
+					
+						currTableBody = $("#quizTable").find("tbody");
+						for (var i in data['quizArr']) {
+							var curClass = data['quizArr'][i];
+							currTableBody.append(		'<tr>' +
+														'<td>' + curClass[0] + '</td>' +
+														'<td>' + curClass[1] + '</td>' +
+														'<td>' + curClass[2] + '</td>' +
+														'<td>' + curClass[3] + '</td>' +
+														'<td><a href="' + curClass[4] + '">作業' + curClass[1] + '</a>' +
+														'</tr>');
+						}
+
+						currTableBody = $("#totalTable").find("tbody");
+						for (var i in data['totalClassArr']) {
+							var curClass = data['totalClassArr'][i];
+							currTableBody.append(		'<tr>' +
+														'<td>' + curClass[0] + '</td>' +
+														'<td><a href="' + curClass[1] + '">前往 ' + curClass[0] + '</a>' +
+														'</tr>');
+						}
+
+					}
+				});
+			}	
+		h1 Moodle管理
+
+		<!-- 總科目 -->
+		div(class ='panel')
+			div(class='panel-heading', data-toggle='collapse', data-parent='#accordion', href='#collapseZero', aria-expanded='true', aria-controls='collapseOne') 所有科目列表
+					
+			#collapseZero.panel-collapse.collapse.in(role='tabpanel', aria-labelledby='collapseZero')
+
+				div(class='panel-body')
+					table.table.table-striped.table-hover(id='totalTable')
+						thead
+							tr
+								th 科目
+								th 前往 Moodle
+						tbody
+
+		<!-- 通知中心 -->
+		div(class ='panel panel-warning')
+			div(class='panel-heading', data-toggle='collapse', data-parent='#accordion', href='#collapseOne', aria-expanded='true', aria-controls='collapseOne') 課程通知
+					
+			#collapseOne.panel-collapse.collapse.in(role='tabpanel', aria-labelledby='collapseOne')
+
+				div(class='panel-body')
+					table.table.table-striped.table-hover(id='alertTable')
+						thead
+							tr
+								th 科目
+								th 通知標題
+								th 通知詳情
+								th 前往 Moodle
+						tbody
+
+		<!-- 測驗區 -->
+		div(class ='panel panel-info')
+
+			div(class='panel-heading', data-toggle='collapse', data-parent='#accordion', href='#collapseQuiz', aria-expanded='true', aria-controls='collapseQuiz') 線上測驗
+						
+			#collapseQuiz.panel-collapse.collapse.in(role='tabpanel', aria-labelledby='collapseQuiz')
+
+				div(class='panel-body')
+					table.table.table-striped.table-hover(id='quizTable')
+						thead
+							tr
+								th 科目
+								th 測驗名稱
+								th 剩餘天數
+								th 詳細
+								th 前往 Moodle
+						tbody
+
+		<!-- 未過期區 -->
+		div(class ='panel panel-danger')
+
+			div(class='panel-heading', data-toggle='collapse', data-parent='#accordion', href='#collapseTwo', aria-expanded='true', aria-controls='collapseTwo') 尚未過期
+						
+			#collapseTwo.panel-collapse.collapse.in(role='tabpanel', aria-labelledby='collapseTwo')
+
+				div(class='panel-body')
+					table.table.table-striped.table-hover(id='aliveTable')
+						thead
+							tr
+								th 科目
+								th 作業名稱
+								th 剩餘天數
+								th 狀態
+								th 詳細
+								th 前往 Moodle
+						tbody
+
+		<!-- 已過期區 -->
+		div(class ='panel panel-success')
+			div(class='panel-heading', data-toggle='collapse', data-parent='#accordion', href='#collapseThree', aria-expanded='true', aria-controls='collapseThree') 已過期
+			
+			#collapseThree.panel-collapse.collapse.in(role='tabpanel',aria-labelledby='collapseThree')
+
+				div(class='panel-body')
+					table.table.table-striped.table-hover(id='deadTable')
+						thead
+							tr
+								th 科目
+								th 作業名稱
+								th 已過期天數
+								th 狀態
+								th 詳細
+								th 前往 Moodle
+						tbody

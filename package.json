@@ -1,0 +1,35 @@
+{
+  "name": "isu-survey",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "dateformat": "^1.0.12",
+    "express": "^4.13.4",
+    "express-session": "^1.13.0",
+    "iconv-lite": "^0.4.13",
+    "jade": "^1.11.0",
+    "morgan": "^1.7.0",
+    "request": "^2.69.0",
+    "tough-cookie-filestore": "0.0.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aaaddress1/isuSurvey-NodeJS.git"
+  },
+  "keywords": [
+    "isu",
+    "survey"
+  ],
+  "author": "aaaddress1 <aaaddress1@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aaaddress1/isuSurvey-NodeJS/issues"
+  },
+  "homepage": "https://github.com/aaaddress1/isuSurvey-NodeJS#readme"
+}
